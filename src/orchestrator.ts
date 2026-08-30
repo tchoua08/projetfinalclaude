@@ -145,6 +145,8 @@ export class CodeReviewOrchestrator {
           type: 'json_schema',
           schema: ReviewReportJSONSchema
         },
+        // Keep child-process diagnostics visible; otherwise SDK exits only expose code 1.
+        stderr: (data: string) => logger.error('Claude Code stderr', { data: data.trim() }),
         maxTurns: 40
       }
     })) {
