@@ -29,6 +29,7 @@ export const ReviewReportSchema = z.object({
     highPriorityTests: z.number(),
     refactoringOpportunities: z.number()
   }),
+  verdict: z.enum(['approve', 'request_changes', 'comment']).optional(),
   recommendations: z.array(z.object({
     priority: z.enum(['critical', 'high', 'medium', 'low']),
     category: z.string(),

@@ -3,8 +3,8 @@ import { parseArguments, validateEnvironment } from '../src/main.js';
 
 describe('CLI validation', () => {
   it('parses owner, repository, and PR number', () => {
-    expect(parseArguments(['octocat', 'Hello-World', '12'])).toEqual({
-      owner: 'octocat', repo: 'Hello-World', prNumber: 12
+    expect(parseArguments(['octocat/Hello-World', '12', 'json'])).toEqual({
+      owner: 'octocat', repo: 'Hello-World', prNumber: 12, format: 'json'
     });
   });
 

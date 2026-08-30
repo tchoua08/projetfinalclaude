@@ -104,6 +104,7 @@ export class CodeReviewOrchestrator {
   }
 
   private async runReview(owner: string, repo: string, prNumber: number): Promise<ReviewReport> {
+    const startedAt = Date.now();
     const prompt = buildOrchestratorPrompt(owner, repo, prNumber);
 
     for await (const message of this.queryFn({
@@ -149,7 +150,30 @@ export class CodeReviewOrchestrator {
             { issues: parsed.error.issues }
           );
         }
-        return parsed.data;
+        const duration = Date.now() - startedAt;
+        const fileReviews = parsed.data.fileReviews;
+        const scores = fileReviews.map(file => file.codeQuality.overallScore);
+        const overallScore = scores.length === 0
+          ? 100
+          : Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length);
+        const criticalIssues = fileReviews.reduce(
+          (sum, file) => sum + file.codeQuality.issues.filter(issue => issue.severity === 'critical').length,
+          0
+        );
+        const highPriorityTests = fileReviews.reduce(
+          (sum, file) => sum + file.testCoverage.untestedPaths.filter(path => path.priority === 'high' || path.priority === 'critical').length,
+          0
+        );
+        const refactoringOpportunities = fileReviews.reduce((sum, file) => sum + file.refactorings.suggestions.length, 0);
+        const verdict = criticalIssues > 0 || overallScore < 70
+          ? 'request_changes'
+          : overallScore >= 90 ? 'approve' : 'comment';
+        return ReviewReportSchema.parse({
+          ...parsed.data,
+          verdict,
+          summary: { totalFiles: fileReviews.length, overallScore, criticalIssues, highPriorityTests, refactoringOpportunities },
+          metadata: { ...parsed.data.metadata, duration }
+        });
       }
 
       if (message.type === 'result' && message.subtype !== 'success') {
