@@ -39,6 +39,7 @@ export function validateEnvironment(env: NodeJS.ProcessEnv = process.env): void 
   if (!hasAnthropic && !hasBedrock) throw new Error('Authentication missing. Set ANTHROPIC_API_KEY, or AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY + AWS_REGION.');
   if (!env.ANTHROPIC_MODEL) throw new Error('ANTHROPIC_MODEL is required.');
   if (!env.PROJECT_ROOT || !path.isAbsolute(env.PROJECT_ROOT)) throw new Error('PROJECT_ROOT is required and must be an absolute path.');
+  if (!env.GITHUB_TOKEN) throw new Error('GITHUB_TOKEN is required for GitHub MCP access. Add a read-only GitHub token to .env.');
 }
 
 async function saveReports(owner: string, repo: string, prNumber: number, format: OutputFormat, report: Awaited<ReturnType<CodeReviewOrchestrator['reviewPullRequest']>>) {

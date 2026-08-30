@@ -21,14 +21,14 @@ describe('CLI validation', () => {
     expect(() => validateEnvironment({
       ANTHROPIC_API_KEY: 'test',
       ANTHROPIC_MODEL: 'model',
-      PROJECT_ROOT: process.cwd()
+      PROJECT_ROOT: process.cwd(), GITHUB_TOKEN: 'test'
     })).not.toThrow();
   });
 
   it('accepts complete Bedrock authentication', () => {
     expect(() => validateEnvironment({
       AWS_ACCESS_KEY_ID: 'test', AWS_SECRET_ACCESS_KEY: 'test', AWS_REGION: 'us-east-1',
-      ANTHROPIC_MODEL: 'model', PROJECT_ROOT: process.cwd()
+      ANTHROPIC_MODEL: 'model', PROJECT_ROOT: process.cwd(), GITHUB_TOKEN: 'test'
     })).not.toThrow();
   });
 
