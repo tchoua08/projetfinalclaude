@@ -111,6 +111,12 @@ export class CodeReviewOrchestrator {
       prompt: generateMessages(prompt),
       options: {
         cwd: this.projectRoot,
+        // npm/nvm/sudo environments can hide the `node` binary from child processes.
+        // Put the active interpreter's directory first in the child PATH.
+        env: {
+          ...process.env,
+          PATH: `${process.execPath.substring(0, process.execPath.lastIndexOf('/'))}:${process.env.PATH ?? ''}`
+        },
         settingSources: ['project'],
         model: this.model,
         mcpServers: mcpServersConfig,
