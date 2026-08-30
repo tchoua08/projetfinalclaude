@@ -1,0 +1,34 @@
+{
+  "pullRequest": {
+    "owner": "airaamane",
+    "repo": "simple-todo-app",
+    "number": 1
+  },
+  "fileReviews": [],
+  "summary": {
+    "totalFiles": 0,
+    "overallScore": 100,
+    "criticalIssues": 0,
+    "highPriorityTests": 0,
+    "refactoringOpportunities": 0
+  },
+  "verdict": "approve",
+  "recommendations": [
+    {
+      "priority": "critical",
+      "category": "access",
+      "description": "Unable to access pull request airaamane/simple-todo-app#1. The repository may be private, the PR may not exist, or the owner/repo/PR number may be incorrect. Please verify: (1) the repository name is 'simple-todo-app' under owner 'airaamane', (2) PR #1 exists, (3) the repository is public or appropriate access tokens are configured, and (4) GitHub API permissions are granted.",
+      "files": []
+    }
+  ],
+  "metadata": {
+    "analyzedAt": "2026-08-30T00:00:00Z",
+    "duration": 52188,
+    "agentVersions": {
+      "orchestrator": "code-review-orchestrator-v1",
+      "code-quality-analyzer": "not-invoked",
+      "test-coverage-analyzer": "not-invoked",
+      "refactoring-suggester": "not-invoked"
+    }
+  }
+}
