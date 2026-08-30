@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import { existsSync } from 'node:fs';
 import { query } from '@anthropic-ai/claude-agent-sdk';
 import { reviewAgents } from './agents/index.js';
 import { mcpServersConfig } from './config/mcp.config.js';
@@ -55,7 +56,13 @@ export class CodeReviewOrchestrator {
     }
 
     this.model = model;
-    this.projectRoot = projectRoot;
+    this.projectRoot = existsSync(projectRoot) ? projectRoot : process.cwd();
+    if (this.projectRoot !== projectRoot) {
+      logger.warn('PROJECT_ROOT does not exist; using current working directory', {
+        configuredProjectRoot: projectRoot,
+        fallbackProjectRoot: this.projectRoot
+      });
+    }
     this.timeoutMs = options.timeoutMs ?? 120_000;
     this.maxRetries = options.maxRetries ?? 2;
     this.rateLimiter = new RateLimiter(options.rateLimits);
@@ -112,7 +119,9 @@ export class CodeReviewOrchestrator {
       options: {
         cwd: this.projectRoot,
         // npm/nvm/sudo environments can hide the `node` binary from child processes.
-        // Put the active interpreter's directory first in the child PATH.
+        // Use the exact interpreter running this process (the SDK type only exposes
+        // named runtimes, so this narrow cast preserves its runtime contract).
+        executable: process.execPath as 'node',
         env: {
           ...process.env,
           PATH: `${process.execPath.substring(0, process.execPath.lastIndexOf('/'))}:${process.env.PATH ?? ''}`
