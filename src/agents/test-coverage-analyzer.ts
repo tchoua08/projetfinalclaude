@@ -5,5 +5,5 @@ export const testCoverageAnalyzer: AgentDefinition = {
   description: 'Finds concrete untested behaviors, branches, errors, and edge cases introduced or affected by a PR.',
   prompt: TEST_COVERAGE_ANALYZER_PROMPT,
   model: 'inherit',
-  tools: ['Read', 'Grep', 'Glob']
+  tools: ['Read', 'Grep', 'Glob', 'Skill']
 };
